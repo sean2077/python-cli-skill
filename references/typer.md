@@ -1,18 +1,18 @@
-# Typer 详细参考
+# Typer Reference
 
-## 目录
-- [基础结构](#基础结构)
-- [命令与子命令](#命令与子命令)
-- [参数类型](#参数类型)
-- [选项配置](#选项配置)
-- [回调与钩子](#回调与钩子)
-- [错误处理](#错误处理)
+## Table of Contents
+- [Basic Structure](#basic-structure)
+- [Commands and Subcommands](#commands-and-subcommands)
+- [Parameter Types](#parameter-types)
+- [Option Configuration](#option-configuration)
+- [Callbacks and Hooks](#callbacks-and-hooks)
+- [Error Handling](#error-handling)
 
 ---
 
-## 基础结构
+## Basic Structure
 
-### 单命令脚本
+### Single Command Script
 
 ```python
 import typer
@@ -24,7 +24,7 @@ if __name__ == "__main__":
     typer.run(main)
 ```
 
-### 多命令应用
+### Multi-Command Application
 
 ```python
 import typer
@@ -45,9 +45,9 @@ if __name__ == "__main__":
 
 ---
 
-## 命令与子命令
+## Commands and Subcommands
 
-### 子应用（命令组）
+### Sub-applications (Command Groups)
 
 ```python
 import typer
@@ -64,27 +64,27 @@ def create(name: str):
 def delete(name: str):
     print(f"Deleting user: {name}")
 
-# 使用: python main.py users create alice
+# Usage: python main.py users create alice
 ```
 
-### 命令帮助文本
+### Command Help Text
 
 ```python
-@app.command(help="创建新用户")
+@app.command(help="Create a new user")
 def create(name: str):
     """
-    创建新用户。
+    Create a new user.
 
-    NAME: 用户名称
+    NAME: The username
     """
     print(f"Creating {name}")
 ```
 
 ---
 
-## 参数类型
+## Parameter Types
 
-### Argument（位置参数）
+### Argument (Positional)
 
 ```python
 from typing import Annotated
@@ -92,16 +92,16 @@ import typer
 
 @app.command()
 def greet(
-    name: Annotated[str, typer.Argument(help="用户名")],
+    name: Annotated[str, typer.Argument(help="Username")],
     times: Annotated[int, typer.Argument()] = 1,
 ):
     for _ in range(times):
         print(f"Hello {name}")
 
-# 使用: python main.py alice 3
+# Usage: python main.py alice 3
 ```
 
-### Option（命名选项）
+### Option (Named)
 
 ```python
 from typing import Annotated
@@ -109,28 +109,28 @@ import typer
 
 @app.command()
 def greet(
-    name: Annotated[str, typer.Option("--name", "-n", help="用户名")],
+    name: Annotated[str, typer.Option("--name", "-n", help="Username")],
     formal: Annotated[bool, typer.Option("--formal", "-f")] = False,
 ):
     greeting = "Good day" if formal else "Hello"
     print(f"{greeting} {name}")
 
-# 使用: python main.py --name alice -f
+# Usage: python main.py --name alice -f
 ```
 
-### 常用类型
+### Common Types
 
-| 类型 | 示例 | 说明 |
-|------|------|------|
-| `str` | `name: str` | 字符串 |
-| `int` | `count: int` | 整数 |
-| `float` | `rate: float` | 浮点数 |
-| `bool` | `--verbose` | 布尔标志 |
-| `Path` | `file: Path` | 文件路径 |
-| `list[str]` | `--item` | 可重复选项 |
-| `Enum` | `--color` | 枚举选择 |
+| Type | Example | Description |
+|------|---------|-------------|
+| `str` | `name: str` | String |
+| `int` | `count: int` | Integer |
+| `float` | `rate: float` | Float |
+| `bool` | `--verbose` | Boolean flag |
+| `Path` | `file: Path` | File path |
+| `list[str]` | `--item` | Repeatable option |
+| `Enum` | `--color` | Enum choice |
 
-### 枚举选项
+### Enum Options
 
 ```python
 from enum import Enum
@@ -144,14 +144,14 @@ class Color(str, Enum):
 
 @app.command()
 def paint(
-    color: Annotated[Color, typer.Option(help="选择颜色")]
+    color: Annotated[Color, typer.Option(help="Choose color")]
 ):
     print(f"Painting in {color.value}")
 
-# 使用: python main.py --color red
+# Usage: python main.py --color red
 ```
 
-### 文件路径
+### File Paths
 
 ```python
 from pathlib import Path
@@ -165,7 +165,7 @@ def process(
         file_okay=True,
         dir_okay=False,
         readable=True,
-        help="输入文件"
+        help="Input file"
     )],
     output_dir: Annotated[Path, typer.Option(
         exists=True,
@@ -179,9 +179,9 @@ def process(
 
 ---
 
-## 选项配置
+## Option Configuration
 
-### 提示输入
+### Prompt Input
 
 ```python
 @app.command()
@@ -192,21 +192,21 @@ def login(
     print(f"Logging in as {username}")
 ```
 
-### 确认提示
+### Confirmation Prompt
 
 ```python
 @app.command()
 def delete(
     force: Annotated[bool, typer.Option(
-        prompt="确定要删除吗？",
-        help="强制删除"
+        prompt="Are you sure you want to delete?",
+        help="Force delete"
     )] = False,
 ):
     if force:
         print("Deleted!")
 ```
 
-### 环境变量
+### Environment Variables
 
 ```python
 @app.command()
@@ -219,9 +219,9 @@ def connect(
 
 ---
 
-## 回调与钩子
+## Callbacks and Hooks
 
-### 全局选项（callback）
+### Global Options (callback)
 
 ```python
 import typer
@@ -233,7 +233,7 @@ state = {"verbose": False}
 def main(
     verbose: Annotated[bool, typer.Option("--verbose", "-v")] = False,
 ):
-    """应用描述文字"""
+    """Application description"""
     state["verbose"] = verbose
 
 @app.command()
@@ -243,7 +243,7 @@ def run():
     print("Running...")
 ```
 
-### 版本选项
+### Version Option
 
 ```python
 from typing import Optional
@@ -270,9 +270,9 @@ def main(
 
 ---
 
-## 错误处理
+## Error Handling
 
-### 退出码
+### Exit Codes
 
 ```python
 import typer
@@ -285,18 +285,18 @@ def process(file: Path):
     print(f"Processing {file}")
 ```
 
-### 中止执行
+### Abort Execution
 
 ```python
 @app.command()
 def dangerous():
-    confirm = typer.confirm("这是危险操作，确定继续？")
+    confirm = typer.confirm("This is dangerous. Continue?")
     if not confirm:
         raise typer.Abort()
-    print("执行中...")
+    print("Executing...")
 ```
 
-### 异常处理
+### Exception Handling
 
 ```python
 @app.command()

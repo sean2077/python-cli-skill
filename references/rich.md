@@ -1,97 +1,97 @@
-# Rich 详细参考
+# Rich Reference
 
-## 目录
-- [Console 基础](#console-基础)
-- [样式与颜色](#样式与颜色)
-- [表格](#表格)
-- [面板](#面板)
-- [进度条](#进度条)
-- [日志集成](#日志集成)
-- [其他组件](#其他组件)
+## Table of Contents
+- [Console Basics](#console-basics)
+- [Styles and Colors](#styles-and-colors)
+- [Tables](#tables)
+- [Panels](#panels)
+- [Progress Bars](#progress-bars)
+- [Logging Integration](#logging-integration)
+- [Other Components](#other-components)
 
 ---
 
-## Console 基础
+## Console Basics
 
-### 创建 Console
+### Creating Console
 
 ```python
 from rich.console import Console
 
 console = Console()
 
-# 基础打印
+# Basic print
 console.print("Hello, World!")
 
-# 带样式打印
+# Styled print
 console.print("Hello", style="bold red")
 
-# 打印到 stderr
+# Print to stderr
 console.print("Error!", style="red", stderr=True)
 ```
 
 ### print vs log
 
 ```python
-# print: 普通输出
+# print: normal output
 console.print("Processing data...")
 
-# log: 带时间戳和调用位置，适合调试
+# log: with timestamp and call location, good for debugging
 console.log("Starting process")
-console.log("Data loaded", log_locals=True)  # 显示局部变量
+console.log("Data loaded", log_locals=True)  # show local variables
 ```
 
-### 输出控制
+### Output Control
 
 ```python
-# 禁用颜色（如重定向到文件）
+# Disable colors (e.g., redirecting to file)
 console = Console(force_terminal=False)
 
-# 指定宽度
+# Specify width
 console = Console(width=120)
 
-# 记录输出
+# Record output
 console = Console(record=True)
 console.print("Hello")
-html = console.export_html()  # 导出为 HTML
+html = console.export_html()  # export as HTML
 ```
 
 ---
 
-## 样式与颜色
+## Styles and Colors
 
-### 内联样式（markup）
+### Inline Styles (markup)
 
 ```python
-console.print("[bold]粗体[/bold] [italic]斜体[/italic]")
-console.print("[red]红色[/red] [green]绿色[/green] [blue]蓝色[/blue]")
-console.print("[bold red on white]粗体红字白底[/bold red on white]")
-console.print("[link=https://example.com]点击链接[/link]")
+console.print("[bold]Bold[/bold] [italic]Italic[/italic]")
+console.print("[red]Red[/red] [green]Green[/green] [blue]Blue[/blue]")
+console.print("[bold red on white]Bold red on white[/bold red on white]")
+console.print("[link=https://example.com]Click link[/link]")
 ```
 
-### 常用样式
+### Common Styles
 
-| 样式 | 说明 |
-|------|------|
-| `bold` | 粗体 |
-| `italic` | 斜体 |
-| `underline` | 下划线 |
-| `strike` | 删除线 |
-| `dim` | 暗淡 |
-| `reverse` | 反色 |
+| Style | Description |
+|-------|-------------|
+| `bold` | Bold |
+| `italic` | Italic |
+| `underline` | Underline |
+| `strike` | Strikethrough |
+| `dim` | Dimmed |
+| `reverse` | Reversed |
 
-### 常用颜色
+### Common Colors
 
-| 颜色 | 说明 |
-|------|------|
-| `red`, `green`, `blue` | 基础色 |
-| `cyan`, `magenta`, `yellow` | 辅助色 |
-| `white`, `black` | 黑白 |
-| `bright_red`, `bright_green` | 亮色 |
-| `#ff5733` | 十六进制 |
+| Color | Description |
+|-------|-------------|
+| `red`, `green`, `blue` | Basic colors |
+| `cyan`, `magenta`, `yellow` | Secondary colors |
+| `white`, `black` | Black & white |
+| `bright_red`, `bright_green` | Bright colors |
+| `#ff5733` | Hex color |
 | `rgb(255,87,51)` | RGB |
 
-### Style 对象
+### Style Object
 
 ```python
 from rich.style import Style
@@ -105,17 +105,17 @@ console.print("Success!", style=success_style)
 
 ---
 
-## 表格
+## Tables
 
-### 基础表格
+### Basic Table
 
 ```python
 from rich.table import Table
 
-table = Table(title="用户列表")
+table = Table(title="User List")
 table.add_column("ID", justify="right", style="cyan")
-table.add_column("名称", style="magenta")
-table.add_column("状态", justify="center")
+table.add_column("Name", style="magenta")
+table.add_column("Status", justify="center")
 
 table.add_row("1", "Alice", "[green]Active[/green]")
 table.add_row("2", "Bob", "[red]Inactive[/red]")
@@ -124,63 +124,63 @@ table.add_row("3", "Charlie", "[yellow]Pending[/yellow]")
 console.print(table)
 ```
 
-### 表格样式
+### Table Styling
 
 ```python
 table = Table(
-    title="报表",
+    title="Report",
     title_style="bold magenta",
     header_style="bold cyan",
     border_style="blue",
-    show_lines=True,  # 显示行分隔线
-    expand=True,      # 扩展到终端宽度
+    show_lines=True,  # show row separators
+    expand=True,      # expand to terminal width
 )
 ```
 
-### 列配置
+### Column Configuration
 
 ```python
 table.add_column(
-    "数值",
+    "Value",
     justify="right",      # left, center, right
     style="green",
-    no_wrap=True,         # 禁止换行
-    width=20,             # 固定宽度
-    min_width=10,         # 最小宽度
-    max_width=30,         # 最大宽度
-    ratio=1,              # 比例宽度
+    no_wrap=True,         # disable wrapping
+    width=20,             # fixed width
+    min_width=10,         # minimum width
+    max_width=30,         # maximum width
+    ratio=1,              # proportional width
 )
 ```
 
 ---
 
-## 面板
+## Panels
 
-### 基础面板
+### Basic Panel
 
 ```python
 from rich.panel import Panel
 
 console.print(Panel("Hello, World!"))
-console.print(Panel("带标题", title="Info"))
-console.print(Panel("带副标题", title="Main", subtitle="v1.0"))
+console.print(Panel("With title", title="Info"))
+console.print(Panel("With subtitle", title="Main", subtitle="v1.0"))
 ```
 
-### 面板样式
+### Panel Styling
 
 ```python
 panel = Panel(
-    "内容文本",
-    title="标题",
+    "Content text",
+    title="Title",
     title_align="left",    # left, center, right
     border_style="green",
-    padding=(1, 2),        # (上下, 左右)
-    expand=False,          # 不扩展到终端宽度
+    padding=(1, 2),        # (vertical, horizontal)
+    expand=False,          # don't expand to terminal width
 )
 console.print(panel)
 ```
 
-### 嵌套内容
+### Nested Content
 
 ```python
 from rich.panel import Panel
@@ -190,24 +190,24 @@ table = Table()
 table.add_column("Name")
 table.add_row("Alice")
 
-console.print(Panel(table, title="用户表"))
+console.print(Panel(table, title="User Table"))
 ```
 
 ---
 
-## 进度条
+## Progress Bars
 
-### 简单进度（track）
+### Simple Progress (track)
 
 ```python
 from rich.progress import track
 import time
 
-for item in track(range(100), description="处理中..."):
+for item in track(range(100), description="Processing..."):
     time.sleep(0.01)
 ```
 
-### 自定义进度条
+### Custom Progress Bar
 
 ```python
 from rich.progress import (
@@ -227,8 +227,8 @@ with Progress(
     TaskProgressColumn(),
     TimeRemainingColumn(),
 ) as progress:
-    task1 = progress.add_task("[cyan]下载...", total=1000)
-    task2 = progress.add_task("[green]处理...", total=1000)
+    task1 = progress.add_task("[cyan]Downloading...", total=1000)
+    task2 = progress.add_task("[green]Processing...", total=1000)
 
     while not progress.finished:
         progress.update(task1, advance=5)
@@ -236,24 +236,24 @@ with Progress(
         time.sleep(0.01)
 ```
 
-### 不确定进度
+### Indeterminate Progress
 
 ```python
 with Progress() as progress:
-    task = progress.add_task("[cyan]加载中...", total=None)
-    # total=None 显示不确定进度（旋转动画）
+    task = progress.add_task("[cyan]Loading...", total=None)
+    # total=None shows indeterminate progress (spinning animation)
     time.sleep(2)
 ```
 
-### 手动控制
+### Manual Control
 
 ```python
 progress = Progress()
 progress.start()
 
-task = progress.add_task("处理", total=100)
+task = progress.add_task("Processing", total=100)
 for i in range(100):
-    progress.update(task, advance=1, description=f"处理 {i}")
+    progress.update(task, advance=1, description=f"Processing {i}")
     time.sleep(0.01)
 
 progress.stop()
@@ -261,9 +261,9 @@ progress.stop()
 
 ---
 
-## 日志集成
+## Logging Integration
 
-### 标准库 logging 集成
+### Standard Library logging Integration
 
 ```python
 import logging
@@ -278,14 +278,14 @@ logging.basicConfig(
 
 log = logging.getLogger("myapp")
 
-log.debug("调试信息")
-log.info("普通信息")
-log.warning("警告信息")
-log.error("错误信息")
-log.exception("异常信息")  # 会显示完整 traceback
+log.debug("Debug message")
+log.info("Info message")
+log.warning("Warning message")
+log.error("Error message")
+log.exception("Exception message")  # shows full traceback
 ```
 
-### RichHandler 配置
+### RichHandler Configuration
 
 ```python
 handler = RichHandler(
@@ -294,11 +294,11 @@ handler = RichHandler(
     show_path=True,
     rich_tracebacks=True,
     tracebacks_show_locals=True,
-    markup=True,  # 允许在日志中使用 rich markup
+    markup=True,  # allow rich markup in logs
 )
 ```
 
-### 与 Console 配合
+### With Console
 
 ```python
 from rich.console import Console
@@ -312,9 +312,9 @@ logging.basicConfig(handlers=[handler])
 
 ---
 
-## 其他组件
+## Other Components
 
-### 语法高亮
+### Syntax Highlighting
 
 ```python
 from rich.syntax import Syntax
@@ -327,34 +327,34 @@ def hello(name: str) -> str:
 syntax = Syntax(code, "python", theme="monokai", line_numbers=True)
 console.print(syntax)
 
-# 从文件读取
+# Read from file
 syntax = Syntax.from_path("main.py", theme="monokai")
 console.print(syntax)
 ```
 
-### Markdown 渲染
+### Markdown Rendering
 
 ```python
 from rich.markdown import Markdown
 
 md = """
-# 标题
+# Title
 
-这是一段**粗体**和*斜体*文字。
+This is **bold** and *italic* text.
 
-- 列表项 1
-- 列表项 2
+- Item 1
+- Item 2
 """
 
 console.print(Markdown(md))
 ```
 
-### 树形结构
+### Tree Structure
 
 ```python
 from rich.tree import Tree
 
-tree = Tree("[bold]项目结构")
+tree = Tree("[bold]Project Structure")
 src = tree.add("[blue]src")
 src.add("main.py")
 src.add("utils.py")
@@ -364,26 +364,26 @@ tests.add("test_main.py")
 console.print(tree)
 ```
 
-### 状态指示器
+### Status Indicator
 
 ```python
 from rich.status import Status
 
-with console.status("[bold green]处理中...") as status:
+with console.status("[bold green]Processing...") as status:
     time.sleep(2)
-    status.update("[bold blue]第二阶段...")
+    status.update("[bold blue]Phase 2...")
     time.sleep(2)
 ```
 
-### 分组输出
+### Group Output
 
 ```python
 from rich.console import Group
 from rich.panel import Panel
 
 group = Group(
-    Panel("第一块"),
-    Panel("第二块"),
+    Panel("First block"),
+    Panel("Second block"),
 )
-console.print(Panel(group, title="组合"))
+console.print(Panel(group, title="Combined"))
 ```
